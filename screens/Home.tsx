@@ -1,6 +1,8 @@
 import styled from "styled-components/native";
 import React from "react"
 import { SafeAreaView, StyleProp, Text, TextStyle, TouchableOpacity } from "react-native"
+import { Link } from "react-router-native"
+import { GameScreen } from "@screens"
 
 const Wrapper = styled(SafeAreaView)`
   display: flex;
@@ -21,12 +23,14 @@ const Actions = styled.View`
   align-items: flex-end;
 `
 
-const Touchable = ({ children, style, disabled }: { disabled?: boolean, children: React.ReactNode, style?: StyleProp<TextStyle> }) => {
+const Touchable = ({ children, style, disabled, to }: { to: string, disabled?: boolean, children: React.ReactNode, style?: StyleProp<TextStyle> }) => {
   return (
     <TouchableOpacity disabled={disabled}>
-      <Text style={style}>
-        {children}
-      </Text>
+      <Link to={to} disabled={disabled}>
+        <Text style={style}>
+          {children}
+        </Text>
+      </Link>
     </TouchableOpacity>
   )
 }
@@ -46,11 +50,12 @@ export const HomeScreen = () => {
     <Wrapper>
       <Title>Raid Legacy</Title>
       <Actions>
-        <Button disabled>Continue</Button>
-        <Button>New game</Button>
-        <Button disabled>Options</Button>
-        <Button disabled>Credits</Button>
+        <Button to={'/'} disabled>Continue</Button>
+        <Button to={GameScreen.path}>New game</Button>
+        <Button to={'/'} disabled>Options</Button>
+        <Button to={'/'} disabled>Credits</Button>
       </Actions>
     </Wrapper>
   )
 }
+HomeScreen.path = '/'
