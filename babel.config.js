@@ -7,8 +7,8 @@ module.exports = function(api) {
         'module-resolver',
         {
           alias: {
-            '@screens': './screens/index.ts',
             '@screens/': './screens/*',
+            '@screens': './screens/',
           }
         }
       ]

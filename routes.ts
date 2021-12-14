@@ -1,6 +1,6 @@
-import * as screens from '@screens'
+import { GameScreen, HomeScreen } from '@screens'
 
 export const routes = [
-  screens.HomeScreen,
-  screens.GameScreen
+  HomeScreen,
+  GameScreen
 ]

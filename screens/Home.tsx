@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import React from "react"
 import { SafeAreaView, StyleProp, Text, TextStyle, TouchableOpacity } from "react-native"
 import { Link } from "react-router-native"
-import { GameScreen } from "@screens"
+import { GameScreen } from "@screens/Game"
 
 const Wrapper = styled(SafeAreaView)`
   display: flex;
