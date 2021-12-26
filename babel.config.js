@@ -9,6 +9,10 @@ module.exports = function(api) {
           alias: {
             '@screens/': './screens/*',
             '@screens': './screens/',
+            '@components/': './components/*',
+            '@components': './components/',
+            '@definitions/': './definitions/*',
+            '@definitions': './definitions/',
           }
         }
       ]

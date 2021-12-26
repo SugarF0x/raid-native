@@ -1,6 +1,7 @@
-import { SafeAreaView } from 'react-native'
-import React from "react"
+import { LayoutChangeEvent, SafeAreaView, Text } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/native'
+import { Tile } from '@components'
 
 const GameWrapper = styled(SafeAreaView)`
   background-color: black;
@@ -43,20 +44,14 @@ const HeaderItemLastButtonLast = styled.View`
 
 const Dungeon = styled.View`
   background-color: black;
-  aspect-ratio: 1;
-  padding: 4px;
-`
-
-const DungeonRow = styled.View`
-  aspect-ratio: 6;
   flex-direction: row;
+  aspect-ratio: 1;
 `
 
-const Tile = styled.View`
-  flex: 1;
-  aspect-ratio: 1;
-  margin: 4px;
-  border: 1px solid white;
+const DungeonColumn = styled.View`
+  aspect-ratio: ${1/6};
+  overflow: hidden;
+  position: relative;
 `
 
 const HudWrapper = styled.View`
@@ -76,7 +71,67 @@ const MidWrapper = styled.View`
   flex: 1.5;
 `
 
+function getRandomColor() {
+  let letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 export const GameScreen = () => {
+  const [tiles, setTiles] = useState<string[][]>([])
+  const tilesIdSet = useRef(new Set()).current
+
+  useEffect(() => {
+    const randomIds = Array(36).fill(0).map(_ => {
+      // let number = 0
+      // do number = Math.floor(Math.random() * 1_000)
+      // while (tilesIdSet.has(number))
+      // tilesIdSet.add(number)
+      // return number
+
+      return getRandomColor()
+    })
+    setTiles(Array(6).fill(0).map(_ => Array(6).fill(0).map(_ => randomIds.pop()!)))
+  }, [])
+
+  const handleTileClick = useCallback((value: string) => {
+    tilesIdSet.delete(value)
+
+    const column = tiles.find(columns => columns.includes(value))
+    if (!column) return null
+
+    const columnIndex = tiles.indexOf(column)
+    const tileIndex = column.indexOf(value)
+
+    let number = ''
+    do number = getRandomColor()
+    while (tilesIdSet.has(number))
+    tilesIdSet.add(number)
+
+    const newColumn = [...column]
+    newColumn.splice(tileIndex, 1)
+    newColumn.unshift(number)
+
+    const newTiles = [...tiles]
+    newTiles.splice(columnIndex, 1, newColumn)
+
+    setTiles(newTiles)
+  }, [tiles])
+
+  const [dungeonKey, setDungeonKey] = useState(0)
+  const rerenderDungeon = useCallback(() => {
+    setDungeonKey(key => ++key)
+  }, [])
+
+  const [tileSize, setTileSize] = useState(0)
+  const handleColumnLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout
+    setTileSize(width)
+  }, [])
+
   return (
     <GameWrapper>
       <Game>
@@ -84,14 +139,18 @@ export const GameScreen = () => {
           {Object.keys([...Array(4)]).map(index => <HeaderItem key={index} /> )}
           <HeaderItemLast>
             <HeaderItemLastButton />
-            <HeaderItemLastButtonLast />
+            <HeaderItemLastButtonLast onTouchStart={rerenderDungeon}>
+              <Text style={{ color: 'white', fontSize: 10, padding: 2 }}>rerender dungeon</Text>
+            </HeaderItemLastButtonLast>
           </HeaderItemLast>
         </HeaderWrapper>
-        <Dungeon>
-          {Object.keys([...Array(6)]).map(row => (
-            <DungeonRow key={row}>
-              {Object.keys([...Array(6)]).map(col => <Tile key={col} /> )}
-            </DungeonRow>
+        <Dungeon key={dungeonKey}>
+          {tiles.map((col, colIndex) => (
+            <DungeonColumn key={colIndex} onLayout={handleColumnLayout}>
+              {Boolean(tileSize) && col.map((row, rowIndex) => (
+                <Tile key={row} onClick={handleTileClick} size={tileSize} position={rowIndex} initialPosition={-1-rowIndex}>{ row }</Tile>
+              ))}
+            </DungeonColumn>
           ))}
         </Dungeon>
         <HudWrapper>
