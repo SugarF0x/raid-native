@@ -1,6 +1,6 @@
-import styled from "styled-components/native";
+import styled, { css } from 'styled-components/native'
 import React from "react"
-import { SafeAreaView, StyleProp, Text, TextStyle, TouchableOpacity } from "react-native"
+import { SafeAreaView, StyleProp, Text, TextStyle } from "react-native"
 import { Link } from "react-router-native"
 import { GameScreen } from "@screens/Game"
 
@@ -25,13 +25,11 @@ const Actions = styled.View`
 
 const Touchable = ({ children, style, disabled, to }: { to: string, disabled?: boolean, children: React.ReactNode, style?: StyleProp<TextStyle> }) => {
   return (
-    <TouchableOpacity disabled={disabled}>
-      <Link to={to} disabled={disabled}>
-        <Text style={style}>
-          {children}
-        </Text>
-      </Link>
-    </TouchableOpacity>
+    <Link to={to} disabled={disabled} activeOpacity={.75} underlayColor={'transparent'}>
+      <Text style={style}>
+        {children}
+      </Text>
+    </Link>
   )
 }
 
@@ -39,7 +37,7 @@ const Button = styled(Touchable)`
   font-size: 32px;
   padding: 8px 16px;
   color: yellow;
-  ${props => props.disabled && `
+  ${props => props.disabled && css`
     opacity: .5;
   `}
 `
