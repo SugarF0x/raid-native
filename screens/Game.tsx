@@ -2,6 +2,7 @@ import { LayoutChangeEvent, SafeAreaView, Text } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/native'
 import { Tile } from '@components'
+import { BACKGROUND_COLOR, STROKE_COLOR } from '@consts'
 
 const GameWrapper = styled(SafeAreaView)`
   background-color: black;
@@ -9,7 +10,7 @@ const GameWrapper = styled(SafeAreaView)`
 `
 
 const Game = styled.View`
-  background-color: #5d085d;
+  background-color: ${BACKGROUND_COLOR};
   margin: auto 0;
 `
 
@@ -20,7 +21,7 @@ const HeaderWrapper = styled.View`
 `
 
 const HeaderItem = styled.View`
-  border: 1px solid white;
+  border: 1px solid ${STROKE_COLOR};
   aspect-ratio: 1;
   flex: 1.5;
   margin-right: 8px;
@@ -32,13 +33,13 @@ const HeaderItemLast = styled.View`
 `
 
 const HeaderItemLastButton = styled.View`
-  border: 1px solid white;
+  border: 1px solid ${STROKE_COLOR};
   flex: 1;
   margin-bottom: 8px;
 `
 
 const HeaderItemLastButtonLast = styled.View`
-  border: 1px solid white;
+  border: 1px solid ${STROKE_COLOR};
   flex: 1;
 `
 
@@ -61,12 +62,12 @@ const HudWrapper = styled.View`
 
 const BarWrapper = styled.View`
   aspect-ratio: 1;
-  border: 1px solid white;
+  border: 1px solid ${STROKE_COLOR};
   flex: 1;
 `
 
 const MidWrapper = styled.View`
-  border: 1px solid white;
+  border: 1px solid ${STROKE_COLOR};
   margin-horizontal: 8px;
   flex: 1.5;
 `
@@ -80,40 +81,45 @@ function getRandomColor() {
   return color;
 }
 
+interface TileState {
+  initialPosition: number
+  color: string
+}
+
 export const GameScreen = () => {
-  const [tiles, setTiles] = useState<string[][]>([])
+  const [tiles, setTiles] = useState<TileState[][]>([])
   const tilesIdSet = useRef(new Set()).current
 
   useEffect(() => {
-    const randomIds = Array(36).fill(0).map(_ => {
-      // let number = 0
-      // do number = Math.floor(Math.random() * 1_000)
-      // while (tilesIdSet.has(number))
-      // tilesIdSet.add(number)
-      // return number
-
-      return getRandomColor()
-    })
+    const randomIds = Object.keys(Array(36).fill(0)).map<TileState>(key => ({
+      initialPosition: -1-Number(key) % 6,
+      color: getRandomColor()
+    }))
     setTiles(Array(6).fill(0).map(_ => Array(6).fill(0).map(_ => randomIds.pop()!)))
   }, [])
 
   const handleTileClick = useCallback((value: string) => {
     tilesIdSet.delete(value)
 
-    const column = tiles.find(columns => columns.includes(value))
+    const column = tiles.find(columns => columns.some(entry => entry.color === value))
     if (!column) return null
 
     const columnIndex = tiles.indexOf(column)
-    const tileIndex = column.indexOf(value)
+    const tile = column.find(entry => entry.color === value)
+    if (!tile) return null
+    const tileIndex = column.indexOf(tile)
 
-    let number = ''
-    do number = getRandomColor()
-    while (tilesIdSet.has(number))
-    tilesIdSet.add(number)
+    let color = ''
+    do color = getRandomColor()
+    while (tilesIdSet.has(color))
+    tilesIdSet.add(color)
 
     const newColumn = [...column]
     newColumn.splice(tileIndex, 1)
-    newColumn.unshift(number)
+    newColumn.unshift({
+      color,
+      initialPosition: -1
+    })
 
     const newTiles = [...tiles]
     newTiles.splice(columnIndex, 1, newColumn)
@@ -148,7 +154,7 @@ export const GameScreen = () => {
           {tiles.map((col, colIndex) => (
             <DungeonColumn key={colIndex} onLayout={handleColumnLayout}>
               {Boolean(tileSize) && col.map((row, rowIndex) => (
-                <Tile key={row} onClick={handleTileClick} size={tileSize} position={rowIndex} initialPosition={-1-rowIndex}>{ row }</Tile>
+                <Tile key={row.color} onClick={handleTileClick} size={tileSize} position={rowIndex} initialPosition={row.initialPosition}>{ row.color }</Tile>
               ))}
             </DungeonColumn>
           ))}

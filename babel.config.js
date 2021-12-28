@@ -13,6 +13,10 @@ module.exports = function(api) {
             '@components': './components/',
             '@definitions/': './definitions/*',
             '@definitions': './definitions/',
+            '@utils/': './utils/*',
+            '@utils': './utils/',
+            '@consts/': './consts/*',
+            '@consts': './consts/',
           }
         }
       ]
