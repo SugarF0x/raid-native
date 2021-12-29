@@ -1,7 +1,7 @@
 import { LayoutChangeEvent, SafeAreaView, Text } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/native'
-import { Tile } from '@components'
+import { Tile, Arrow } from '@components'
 import { BACKGROUND_COLOR, STROKE_COLOR } from '@consts'
 
 const GameWrapper = styled(SafeAreaView)`
@@ -44,6 +44,7 @@ const HeaderItemLastButtonLast = styled.View`
 `
 
 const Dungeon = styled.View`
+  position: relative;
   background-color: black;
   flex-direction: row;
   aspect-ratio: 1;
@@ -153,11 +154,14 @@ export const GameScreen = () => {
         <Dungeon key={dungeonKey}>
           {tiles.map((col, colIndex) => (
             <DungeonColumn key={colIndex} onLayout={handleColumnLayout}>
-              {Boolean(tileSize) && col.map((row, rowIndex) => (
+              {!!tileSize && col.map((row, rowIndex) => (
                 <Tile key={row.color} onClick={handleTileClick} size={tileSize} position={rowIndex} initialPosition={row.initialPosition}>{ row.color }</Tile>
               ))}
             </DungeonColumn>
           ))}
+          {!!tileSize && (
+            <Arrow size={tileSize} points={[{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 1 }]} />
+          )}
         </Dungeon>
         <HudWrapper>
           <BarWrapper />

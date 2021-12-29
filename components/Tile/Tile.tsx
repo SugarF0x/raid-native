@@ -1,6 +1,6 @@
 import styled from 'styled-components/native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Text, Animated } from 'react-native'
+import { Animated } from 'react-native'
 import { useTranslation } from '@components/Tile/hooks'
 
 interface TileComponentProps {
@@ -53,8 +53,6 @@ export const Tile = (props: TileProps) => {
           { perspective: 1000 }
         ]
       }}
-    >
-      { children && <Text style={{ color: 'white', padding: 5 }}>{''}</Text> }
-    </TileComponent>
+    />
   )
 }
