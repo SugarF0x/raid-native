@@ -1,8 +1,8 @@
 import React from 'react'
 import Svg from 'react-native-svg'
 import { Position } from '@definitions'
-import { Arrowhead } from '@components/Arrow/Arrowhead'
-import { Outline, Inline } from '@components/Arrow/Line'
+import { Arrowhead } from '@components/Dungeon/Arrow/Arrowhead'
+import { Outline, Inline } from '@components/Dungeon/Arrow/Line'
 import { View } from 'react-native'
 
 export interface ArrowProps {
