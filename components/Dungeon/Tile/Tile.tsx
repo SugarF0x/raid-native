@@ -2,7 +2,7 @@ import styled from 'styled-components/native'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Animated, TouchableWithoutFeedback } from 'react-native'
 import { useTranslation } from '@components/Dungeon/Tile/hooks'
-import { Position } from '@definitions'
+import { Position } from '@classes'
 
 export interface TileMeta {
   position: Position
@@ -42,7 +42,6 @@ export const Tile = (props: TileProps) => {
 
   const handleTouch = useCallback(() => {
     onSelect(meta)
-    console.log(children)
   }, [meta])
 
   useEffect(() => {

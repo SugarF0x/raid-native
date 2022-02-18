@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Position } from '@definitions'
+import { Position } from '@classes'
 import { Arrow } from './Arrow'
 import { Tile } from './Tile'
 import { LayoutChangeEvent } from 'react-native'
@@ -92,7 +92,7 @@ export const Dungeon = () => {
       {tiles.map((col, colIndex) => (
         <DungeonColumn key={colIndex} onLayout={handleColumnLayout}>
           {!!tileSize && col.map((row, rowIndex) => {
-            const position: Position = { x: colIndex, y: rowIndex }
+            const position = new Position(colIndex, rowIndex)
 
             return <Tile key={row.color} onSelect={handleTileSelect} size={tileSize} position={position} initialPosition={row.initialPosition}>{ row.color }</Tile>
           })}

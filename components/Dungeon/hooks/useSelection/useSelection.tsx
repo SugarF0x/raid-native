@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { isInProximity, isNotSelected, isSamePosition } from './validators'
+import { isNotSelected } from './validators'
 import { TileMeta } from '@components/Dungeon/Tile'
 
 export function useSelection() {
@@ -10,13 +10,13 @@ export function useSelection() {
 
   const handleTileSelect = useCallback((meta: TileMeta) => {
     const isValid = [
-      isInProximity(meta.position, lastSelectedTile?.position),
+      !lastSelectedTile?.position || meta.position.isNear(lastSelectedTile.position),
       isNotSelected(meta.position, selectedPoints)
     ].every(Boolean)
 
     if (!isValid) return
 
-    if (isSamePosition(meta.position, previousSelectedTile?.position)) {
+    if (previousSelectedTile?.position && meta.position.isSame(previousSelectedTile.position)) {
       const newSelection = [...selectedTiles]
       newSelection.pop()
       setSelectedTiles(newSelection)
