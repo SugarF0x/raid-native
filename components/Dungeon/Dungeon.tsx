@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Position } from '@classes'
 import { Arrow } from './Arrow'
-import { Tile } from './Tile'
+import { Tile as TileComponent } from './Tile'
 import { LayoutChangeEvent } from 'react-native'
 import styled from 'styled-components/native'
 import { useSelection } from '@components/Dungeon/hooks'
+import { Tile } from '@classes'
 
 const DungeonWrapper = styled.View`
   position: relative;
@@ -19,30 +19,22 @@ const DungeonColumn = styled.View`
   position: relative;
 `
 
-function getRandomColor() {
-  let letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
-
 interface TileState {
   initialPosition: number
-  color: string
+  tile: Tile
 }
 
 export const Dungeon = () => {
+  const [tileSize, setTileSize] = useState(0)
   const [tiles, setTiles] = useState<TileState[][]>([])
 
   useEffect(() => {
-    const randomIds = Object.keys(Array(36).fill(0)).map<TileState>(key => ({
-      initialPosition: -1-Number(key) % 6,
-      color: getRandomColor()
-    }))
-    setTiles(Array(6).fill(0).map(_ => Array(6).fill(0).map(_ => randomIds.pop()!)))
-  }, [])
+    if (!tiles.length)
+    setTiles(Array(6).fill(0).map((_, col) => Array(6).fill(0).map((_, row) => ({
+      initialPosition: row-6,
+      tile: new Tile(col, row, tileSize)
+    }))))
+  }, [tileSize])
 
   /*
 
@@ -79,7 +71,6 @@ export const Dungeon = () => {
   }, [tiles])
    */
 
-  const [tileSize, setTileSize] = useState(0)
   const handleColumnLayout = useCallback((event: LayoutChangeEvent) => {
     const { width } = event.nativeEvent.layout
     setTileSize(width)
@@ -90,16 +81,27 @@ export const Dungeon = () => {
   return (
     <DungeonWrapper>
       {tiles.map((col, colIndex) => (
-        <DungeonColumn key={colIndex} onLayout={handleColumnLayout}>
-          {!!tileSize && col.map((row, rowIndex) => {
-            const position = new Position(colIndex, rowIndex)
-
-            return <Tile key={row.color} onSelect={handleTileSelect} size={tileSize} position={position} initialPosition={row.initialPosition}>{ row.color }</Tile>
-          })}
+        <DungeonColumn
+          key={colIndex}
+          onLayout={handleColumnLayout}
+        >
+          {!!tileSize && col.map((row, rowIndex) => (
+            <TileComponent
+              key={row.tile.color}
+              size={tileSize}
+              row={rowIndex}
+              initialPosition={row.initialPosition}
+            >
+              { row.tile.color }
+            </TileComponent>
+          ))}
         </DungeonColumn>
       ))}
       {!!tileSize && (
-        <Arrow size={tileSize} points={selectedPoints} />
+        <Arrow
+          size={tileSize}
+          points={selectedPoints}
+        />
       )}
     </DungeonWrapper>
   )

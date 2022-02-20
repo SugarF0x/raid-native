@@ -1,11 +1,11 @@
-type SetPosArgType = null | number | ((val: number) => number)
+export type SetPosArgType = null | number | ((val: number) => number)
 
 export class Position {
-  readonly x: number
-  readonly y: number
+  x: number
+  y: number
 
-  constructor(x: number, y: number)
   constructor(pos: Position);
+  constructor(x: number, y: number);
   constructor(xp: number | Position, y?: number) {
     if (xp instanceof Position) {
       this.x = xp.x
@@ -17,21 +17,8 @@ export class Position {
   }
 
   setPos(x: SetPosArgType, y: SetPosArgType) {
-    let newX = this.x
-    if (typeof x === 'number') {
-      newX = x
-    } else if (typeof x === 'function') {
-      newX = x(this.x)
-    }
-
-    let newY = this.y
-    if (typeof y === 'number') {
-      newY = y
-    } else if (typeof y === 'function') {
-      newY = y(this.y)
-    }
-
-    return new Position(newX, newY)
+    this.x = Position.handleSetter(x, this.x)
+    this.y = Position.handleSetter(y, this.y)
   }
 
   isSame(target: Position): boolean {
@@ -49,6 +36,17 @@ export class Position {
   }
 
   toString(): string {
-    return `${this.x}-${this.y}`
+    return [this.x, this.y].join('-')
+  }
+
+  static handleSetter(value: SetPosArgType, initialValue: number): number {
+    let newValue = initialValue
+    if (typeof value === 'number') {
+      newValue = value
+    } else if (typeof value === 'function') {
+      newValue = value(initialValue)
+    }
+
+    return newValue
   }
 }

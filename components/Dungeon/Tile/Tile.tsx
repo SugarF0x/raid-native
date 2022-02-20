@@ -1,5 +1,5 @@
 import styled from 'styled-components/native'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Animated, TouchableWithoutFeedback } from 'react-native'
 import { useTranslation } from '@components/Dungeon/Tile/hooks'
 import { Position } from '@classes'
@@ -23,37 +23,28 @@ const TileComponent = styled(Animated.View)<TileComponentProps>`
 `
 
 interface TileProps {
-  onSelect: (meta: TileMeta) => void
   children: string
   size: number
-  position: Position
+  row: number
   initialPosition: number
 }
 
 export const Tile = (props: TileProps) => {
-  const { onSelect, children, position, initialPosition, size } = props
+  const { children, row, initialPosition, size } = props
 
-  const meta = useMemo<TileMeta>(() => ({
-    position
-  }), [position])
-
-  const { translationAnimTiming, topOffset } = useTranslation({ size, position: position.y, initialPosition })
-  const [currentPosition, setCurrentPosition] = useState(initialPosition)
-
-  const handleTouch = useCallback(() => {
-    onSelect(meta)
-  }, [meta])
+  const { translationAnimTiming, topOffset } = useTranslation({ size, position: row, initialPosition })
+  const [currentRow, setCurrentRow] = useState(initialPosition)
 
   useEffect(() => {
-    if (position.y <= currentPosition) return
+    if (row <= currentRow) return
 
     translationAnimTiming.start(() => {
-      setCurrentPosition(position.y)
+      setCurrentRow(row)
     })
-  }, [position])
+  }, [row])
 
   return (
-    <TouchableWithoutFeedback onPress={handleTouch}>
+    <TouchableWithoutFeedback>
       <TileComponent
         color={children}
         size={size}
