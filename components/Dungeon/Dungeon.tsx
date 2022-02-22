@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Arrow } from './Arrow'
 import { Tile as TileComponent } from './Tile'
-import { GestureResponderEvent, LayoutChangeEvent, PanResponder } from 'react-native'
+import { LayoutChangeEvent } from 'react-native'
 import styled from 'styled-components/native'
-import { useSelection } from '@components/Dungeon/hooks'
-import { Position, Tile } from '@classes'
+import { useSelection, useTouch } from './hooks'
+import { Tile } from '@classes'
 
 const DungeonWrapper = styled.View`
   position: relative;
@@ -86,24 +86,7 @@ export const Dungeon = () => {
   }, [])
 
   const { selectedPoints, onTouchEnd, onTouchMove } = useSelection({ tiles: allTiles })
-
-  const [touchPos, setTouchPos] = useState<null | Position>(null)
-
-  useEffect(() => {
-    if (touchPos) onTouchMove(touchPos)
-    else onTouchEnd()
-  }, [touchPos])
-
-  const panResponder = useRef(PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderMove: (e: GestureResponderEvent) => {
-      const { locationX: x, locationY: y } = e.nativeEvent
-      setTouchPos(new Position(x, y))
-    },
-    onPanResponderEnd: () => {
-      setTouchPos(null)
-    }
-  }))
+  const { panResponder } = useTouch({ onTouchEnd, onTouchMove })
 
   return (
     <DungeonWrapper onLayout={handleLayout}>
