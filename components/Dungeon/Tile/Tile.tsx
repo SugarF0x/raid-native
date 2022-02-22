@@ -1,6 +1,6 @@
 import styled from 'styled-components/native'
 import React, { useEffect, useState } from 'react'
-import { Animated, TouchableWithoutFeedback } from 'react-native'
+import { Animated } from 'react-native'
 import { useTranslation } from '@components/Dungeon/Tile/hooks'
 import { Position } from '@classes'
 
@@ -44,17 +44,15 @@ export const Tile = (props: TileProps) => {
   }, [row])
 
   return (
-    <TouchableWithoutFeedback>
-      <TileComponent
-        color={children}
-        size={size}
-        style={{
-          transform: [
-            { translateY: topOffset },
-            { perspective: 1000 }
-          ]
-        }}
-      />
-    </TouchableWithoutFeedback>
+    <TileComponent
+      color={children}
+      size={size}
+      style={{
+        transform: [
+          { translateY: topOffset },
+          { perspective: 1000 }
+        ]
+      }}
+    />
   )
 }

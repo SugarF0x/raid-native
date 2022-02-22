@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Arrow } from './Arrow'
 import { Tile as TileComponent } from './Tile'
-import { LayoutChangeEvent } from 'react-native'
+import { GestureResponderEvent, LayoutChangeEvent, PanResponder } from 'react-native'
 import styled from 'styled-components/native'
 import { useSelection } from '@components/Dungeon/hooks'
 import { Tile } from '@classes'
@@ -11,6 +11,14 @@ const DungeonWrapper = styled.View`
   background-color: black;
   flex-direction: row;
   aspect-ratio: 1;
+`
+
+const HitboxArea = styled.View`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 `
 
 const DungeonColumn = styled.View`
@@ -76,6 +84,14 @@ export const Dungeon = () => {
     setTileSize(width)
   }, [])
 
+  const panResponder = useRef(PanResponder.create({
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderMove: (e: GestureResponderEvent) => {
+      const { locationX: x, locationY: y } = e.nativeEvent
+      console.log(x, y)
+    }
+  })).current
+
   const { selectedPoints, handleTileSelect } = useSelection()
 
   return (
@@ -103,6 +119,7 @@ export const Dungeon = () => {
           points={selectedPoints}
         />
       )}
+      <HitboxArea {...panResponder.panHandlers} />
     </DungeonWrapper>
   )
 }
