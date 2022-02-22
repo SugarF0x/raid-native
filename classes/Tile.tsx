@@ -41,6 +41,16 @@ export class Tile extends Shape {
     }
   }
 
+  isNear(target: Tile): boolean {
+    const { col: col1, row: row1 } = this
+    const { col: col2, row: row2 } = target
+
+    return col2 >= col1 - 1
+      && col2 <= col1 + 1
+      && row2 >= row1 - 1
+      && row2 <= row1 + 1
+  }
+
   setTilePos(col: SetPosArgType, row: SetPosArgType) {
     this.col = Tile.handleSetter(col, this.col)
     this.row = Tile.handleSetter(row, this.row)

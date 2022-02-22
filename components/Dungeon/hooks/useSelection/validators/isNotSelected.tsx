@@ -1,4 +1,4 @@
-import { Position } from '@definitions'
+import { Position } from '@classes'
 
 /**
  * Checks if tile is not selected, where selection is defined as anything

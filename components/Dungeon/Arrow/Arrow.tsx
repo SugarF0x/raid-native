@@ -1,6 +1,6 @@
 import React from 'react'
 import Svg from 'react-native-svg'
-import { Position } from '@definitions'
+import { Position } from '@classes'
 import { Arrowhead } from '@components/Dungeon/Arrow/Arrowhead'
 import { Outline, Inline } from '@components/Dungeon/Arrow/Line'
 import { View } from 'react-native'

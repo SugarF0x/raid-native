@@ -1,6 +1,6 @@
 import React from 'react'
 import { Polyline, PolylineProps } from 'react-native-svg'
-import { Position } from '@definitions'
+import { Position } from '@classes'
 
 function convertPositionToLineAttrs(points: Position[], size: number) {
   const offset = Math.floor(size / 2)

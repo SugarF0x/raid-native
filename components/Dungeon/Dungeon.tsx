@@ -85,19 +85,23 @@ export const Dungeon = () => {
     setTileSize(width / 6)
   }, [])
 
-  const { selectedPoints, handleTouch } = useSelection({ tiles: allTiles })
+  const { selectedPoints, onTouchEnd, onTouchMove } = useSelection({ tiles: allTiles })
 
-  const [touchPos, setTouchPos] = useState(new Position(-1,-1))
+  const [touchPos, setTouchPos] = useState<null | Position>(null)
 
   useEffect(() => {
-    handleTouch(touchPos)
-  }, [touchPos, handleTouch])
+    if (touchPos) onTouchMove(touchPos)
+    else onTouchEnd()
+  }, [touchPos])
 
   const panResponder = useRef(PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
     onPanResponderMove: (e: GestureResponderEvent) => {
       const { locationX: x, locationY: y } = e.nativeEvent
       setTouchPos(new Position(x, y))
+    },
+    onPanResponderEnd: () => {
+      setTouchPos(null)
     }
   }))
 

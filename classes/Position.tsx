@@ -21,16 +21,6 @@ export class Position {
     this.y = Position.handleSetter(y, this.y)
   }
 
-  isNear(target: Position): boolean {
-    const { x: x1, y: y1 } = this
-    const { x: x2, y: y2 } = target
-
-    return x2 >= x1 - 1
-      && x2 <= x1 + 1
-      && y2 >= y1 - 1
-      && y2 <= y1 + 1
-  }
-
   isSame(target: Position): boolean {
     return Position.isSame(this, target)
   }
