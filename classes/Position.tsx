@@ -21,10 +21,6 @@ export class Position {
     this.y = Position.handleSetter(y, this.y)
   }
 
-  isSame(target: Position): boolean {
-    return this.toString() === target.toString()
-  }
-
   isNear(target: Position): boolean {
     const { x: x1, y: y1 } = this
     const { x: x2, y: y2 } = target
@@ -35,8 +31,12 @@ export class Position {
       && y2 <= y1 + 1
   }
 
+  isSame(target: Position): boolean {
+    return Position.isSame(this, target)
+  }
+
   toString(): string {
-    return [this.x, this.y].join('-')
+    return Position.toString(this)
   }
 
   static handleSetter(value: SetPosArgType, initialValue: number): number {
@@ -48,5 +48,13 @@ export class Position {
     }
 
     return newValue
+  }
+
+  static isSame(pos1: Position, pos2: Position): boolean {
+    return Position.toString(pos1) === Position.toString(pos2)
+  }
+
+  static toString(pos: Position): string {
+    return [pos.x, pos.y].join('-')
   }
 }

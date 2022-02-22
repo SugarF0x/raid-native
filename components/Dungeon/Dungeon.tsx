@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Arrow } from './Arrow'
 import { Tile as TileComponent } from './Tile'
 import { GestureResponderEvent, LayoutChangeEvent, PanResponder } from 'react-native'
 import styled from 'styled-components/native'
 import { useSelection } from '@components/Dungeon/hooks'
-import { Tile } from '@classes'
+import { Position, Tile } from '@classes'
 
 const DungeonWrapper = styled.View`
   position: relative;
@@ -35,9 +35,10 @@ interface TileState {
 export const Dungeon = () => {
   const [tileSize, setTileSize] = useState(0)
   const [tiles, setTiles] = useState<TileState[][]>([])
+  const allTiles = useMemo(() => tiles.flatMap(i => i).map(entry => entry.tile), [tiles])
 
   useEffect(() => {
-    if (!tiles.length)
+    if (!tiles.length && tileSize)
     setTiles(Array(6).fill(0).map((_, col) => Array(6).fill(0).map((_, row) => ({
       initialPosition: row-6,
       tile: new Tile(col, row, tileSize)
@@ -79,28 +80,31 @@ export const Dungeon = () => {
   }, [tiles])
    */
 
-  const handleColumnLayout = useCallback((event: LayoutChangeEvent) => {
+  const handleLayout = useCallback((event: LayoutChangeEvent) => {
     const { width } = event.nativeEvent.layout
-    setTileSize(width)
+    setTileSize(width / 6)
   }, [])
+
+  const { selectedPoints, handleTouch } = useSelection({ tiles: allTiles })
+
+  const [touchPos, setTouchPos] = useState(new Position(-1,-1))
+
+  useEffect(() => {
+    handleTouch(touchPos)
+  }, [touchPos, handleTouch])
 
   const panResponder = useRef(PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
     onPanResponderMove: (e: GestureResponderEvent) => {
       const { locationX: x, locationY: y } = e.nativeEvent
-      console.log(x, y)
+      setTouchPos(new Position(x, y))
     }
-  })).current
-
-  const { selectedPoints, handleTileSelect } = useSelection()
+  }))
 
   return (
-    <DungeonWrapper>
+    <DungeonWrapper onLayout={handleLayout}>
       {tiles.map((col, colIndex) => (
-        <DungeonColumn
-          key={colIndex}
-          onLayout={handleColumnLayout}
-        >
+        <DungeonColumn key={colIndex} >
           {!!tileSize && col.map((row, rowIndex) => (
             <TileComponent
               key={row.tile.color}
@@ -119,7 +123,7 @@ export const Dungeon = () => {
           points={selectedPoints}
         />
       )}
-      <HitboxArea {...panResponder.panHandlers} />
+      <HitboxArea {...panResponder.current.panHandlers} />
     </DungeonWrapper>
   )
 }

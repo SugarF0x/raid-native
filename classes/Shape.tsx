@@ -34,6 +34,10 @@ export class Shape extends Position {
   }
 
   toString(): string {
-    return [super.toString(), this.width, this.height].join('-')
+    return Shape.toString(this)
+  }
+
+  static toString(shape: Shape): string {
+    return [super.toString(shape), shape.width, shape.height].join('-')
   }
 }
