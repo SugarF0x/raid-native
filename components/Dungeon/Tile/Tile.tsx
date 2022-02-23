@@ -2,7 +2,7 @@ import styled from 'styled-components/native'
 import React, { useEffect, useState } from 'react'
 import { Animated } from 'react-native'
 import { useTranslation } from '@components/Dungeon/Tile/hooks'
-import { Position } from '@classes'
+import { Position, Tile as TileClass } from '@classes'
 
 export interface TileMeta {
   position: Position
@@ -13,6 +13,7 @@ export interface TileMeta {
 interface TileComponentProps {
   size: number
   color: string
+  col: number
 }
 
 const TileComponent = styled(Animated.View)<TileComponentProps>`
@@ -20,20 +21,19 @@ const TileComponent = styled(Animated.View)<TileComponentProps>`
   width: ${props => props.size}px;
   height: ${props => props.size}px;
   background-color: ${props => props.color};
+  left: ${props => props.col * props.size}px;
 `
 
 interface TileProps {
-  children: string
-  size: number
-  row: number
-  initialPosition: number
+  meta: TileClass
 }
 
 export const Tile = (props: TileProps) => {
-  const { children, row, initialPosition, size } = props
+  const { meta } = props
+  const { col, row, color, transitionStartRow, width: size } = meta
 
-  const { translationAnimTiming, topOffset } = useTranslation({ size, position: row, initialPosition })
-  const [currentRow, setCurrentRow] = useState(initialPosition)
+  const { translationAnimTiming, topOffset } = useTranslation({ size, position: row, initialPosition: transitionStartRow })
+  const [currentRow, setCurrentRow] = useState(transitionStartRow)
 
   useEffect(() => {
     if (row <= currentRow) return
@@ -45,7 +45,8 @@ export const Tile = (props: TileProps) => {
 
   return (
     <TileComponent
-      color={children}
+      col={col}
+      color={color}
       size={size}
       style={{
         transform: [

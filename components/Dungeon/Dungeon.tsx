@@ -10,6 +10,7 @@ const DungeonWrapper = styled.View`
   background-color: black;
   flex-direction: row;
   aspect-ratio: 1;
+  overflow: hidden;
 `
 
 const HitboxArea = styled.View`
@@ -20,15 +21,9 @@ const HitboxArea = styled.View`
   height: 100%;
 `
 
-const DungeonColumn = styled.View`
-  aspect-ratio: ${1/6};
-  overflow: hidden;
-  position: relative;
-`
-
 export const Dungeon = () => {
-  const { setTileSize, tileSize, tiles, allTiles } = useGrid()
-  const { selectedPoints, onTouchEnd, onTouchMove } = useSelection({ tiles: allTiles })
+  const { setTileSize, tileSize, tiles } = useGrid()
+  const { selectedPoints, onTouchEnd, onTouchMove } = useSelection({ tiles })
   const { panResponder } = useTouch({ onTouchEnd, onTouchMove })
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
@@ -38,29 +33,17 @@ export const Dungeon = () => {
 
   return (
     <DungeonWrapper onLayout={handleLayout}>
-      {!!tileSize && (
-        <>
-          {tiles.map((col, colIndex) => (
-            <DungeonColumn key={colIndex} >
-              {col.map((row, rowIndex) => (
-                <TileComponent
-                  key={row.color}
-                  size={tileSize}
-                  row={rowIndex}
-                  initialPosition={row.transitionStartRow}
-                >
-                  { row.color }
-                </TileComponent>
-              ))}
-            </DungeonColumn>
-          ))}
-          <Arrow
-            size={tileSize}
-            points={selectedPoints}
-          />
-          <HitboxArea {...panResponder.current.panHandlers} />
-        </>
-      )}
+      {tiles.map((tile) => (
+        <TileComponent
+          key={tile.color}
+          meta={tile}
+        />
+      ))}
+      <Arrow
+        size={tileSize}
+        points={selectedPoints}
+      />
+      <HitboxArea {...panResponder.current.panHandlers} />
     </DungeonWrapper>
   )
 }
