@@ -15,17 +15,19 @@ function getRandomColor() {
 export class Tile extends Shape {
   col: number
   row: number
-  hitbox: Shape
+  transitionStartRow: number
+  hitbox!: Shape
   color: string
 
   constructor(tile: Tile);
-  constructor(column: number, row: number, size: number);
-  constructor(ct: Tile | number, r?: number, s?: number) {
+  constructor(column: number, row: number, transitionStartRow: number, size: number);
+  constructor(ct: Tile | number, r?: number, t?: number, s?: number) {
     if (ct instanceof Tile) {
       super(ct.x, ct.y, ct.width, ct.height)
 
       this.col = ct.col
       this.row = ct.row
+      this.transitionStartRow = ct.transitionStartRow
       this.hitbox = ct.hitbox
       this.color = ct.color
     } else {
@@ -33,9 +35,9 @@ export class Tile extends Shape {
 
       this.col = ct!
       this.row = r!
+      this.transitionStartRow = t!
 
-      const offset = s! * HITBOX_MARGIN_PERCENT
-      this.hitbox = new Shape(this.x + offset, this.y + offset, this.width - offset * 2, this.height - offset * 2)
+      this.computeHitbox()
 
       this.color = getRandomColor()
     }
@@ -54,6 +56,16 @@ export class Tile extends Shape {
   setTilePos(col: SetPosArgType, row: SetPosArgType) {
     this.col = Tile.handleSetter(col, this.col)
     this.row = Tile.handleSetter(row, this.row)
+  }
+
+  setSize(w: SetPosArgType, h: SetPosArgType) {
+    super.setSize(w, h)
+    this.computeHitbox()
+  }
+
+  computeHitbox() {
+    const offset = this.width * HITBOX_MARGIN_PERCENT
+    this.hitbox = new Shape(this.x + offset, this.y + offset, this.width - offset * 2, this.height - offset * 2)
   }
 
   toString(): string {
