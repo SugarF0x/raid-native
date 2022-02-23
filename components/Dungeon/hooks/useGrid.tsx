@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Tile } from '@classes'
+import { useCallback, useEffect, useState } from 'react'
+import { Position, Tile } from '@classes'
 
 export function useGrid() {
   const [tileSize, setTileSize] = useState(0)
@@ -11,33 +11,46 @@ export function useGrid() {
       setTiles(Array(6).fill(0).flatMap((_, col) => Array(6).fill(0).map((_, row) => new Tile(col, row, row-6, tileSize))))
   }, [tileSize])
 
+  const handleTileDeletion = useCallback((selectedTiles: Tile[]) => {
+    const newTiles = [...tiles]
+
+    // remove selected tiles
+    selectedTiles.forEach(tile => {
+      const tileIndex = newTiles.indexOf(tile!)
+      newTiles.splice(tileIndex, 1)
+    })
+
+    // move hovering tiles downwards
+    for (let col = 5; col >= 0; col--) {
+      for (let row = 5; row >= 0; row--) {
+        // if tile is empty - find next top tile and move to this position
+        if (!newTiles.find(tile => tile.isSameDungeonPosition(new Position(col, row)))) {
+          for (let checkRow = row - 1; checkRow >= 0; checkRow--) {
+            let nextTopTile = newTiles.find(tile => tile.isSameDungeonPosition(new Position(col, checkRow)))
+            if (nextTopTile) {
+              nextTopTile.setTilePos(col, row)
+              break
+            }
+          }
+        }
+      }
+    }
+
+    // generate new tiles
+    for (let col = 0; col < 6; col++) {
+      const newTilesRequired = 6 - newTiles.filter(tile => tile.col === col).length
+      for (let row = -1; row >= newTilesRequired * (-1); row--) {
+        newTiles.push(new Tile(col, newTilesRequired + row, row, tileSize))
+      }
+    }
+
+    setTiles(newTiles)
+  }, [tiles, tileSize])
+
   return {
     tileSize,
     setTileSize,
-    tiles
+    tiles,
+    handleTileDeletion
   }
-
-  // const handleTileDeletion = useCallback((tile: Tile) => {
-  //   const columnIndex = tiles.indexOf(column)
-  //   const tile = column.find(entry => entry.color === value)
-  //   if (!tile) return null
-  //   const tileIndex = column.indexOf(tile)
-  //
-  //   let color = ''
-  //   do color = getRandomColor()
-  //   while (tilesIdSet.has(color))
-  //   tilesIdSet.add(color)
-  //
-  //   const newColumn = [...column]
-  //   newColumn.splice(tileIndex, 1)
-  //   newColumn.unshift({
-  //     color,
-  //     initialPosition: -1
-  //   })
-  //
-  //   const newTiles = [...tiles]
-  //   newTiles.splice(columnIndex, 1, newColumn)
-  //
-  //   setTiles(newTiles)
-  // }, [tiles])
 }

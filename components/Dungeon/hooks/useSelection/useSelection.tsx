@@ -12,7 +12,6 @@ export function useSelection(options: SelectionOptions) {
   const [selectedTiles, setSelectedTiles] = useState<Tile[]>([])
   const lastSelectedTile = useMemo<Tile>(() => selectedTiles[selectedTiles.length-1], [selectedTiles])
   const previousSelectedTile = useMemo<Tile>(() => selectedTiles[selectedTiles.length-2], [selectedTiles])
-  const selectedPoints = useMemo<Position[]>(() => selectedTiles.map(tile => new Position(tile.col, tile.row)), [selectedTiles])
 
   const handleTileSelect = useCallback((tile: Tile) => {
     const isValid = [
@@ -44,6 +43,6 @@ export function useSelection(options: SelectionOptions) {
   return {
     onTouchMove: handleTouchMove,
     onTouchEnd: handleTouchEnd,
-    selectedPoints
+    selectedTiles
   }
 }

@@ -1,17 +1,19 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Svg from 'react-native-svg'
-import { Position } from '@classes'
+import { Position, Tile } from '@classes'
 import { Arrowhead } from '@components/Dungeon/Arrow/Arrowhead'
 import { Outline, Inline } from '@components/Dungeon/Arrow/Line'
 import { View } from 'react-native'
 
 export interface ArrowProps {
-  points: Position[],
+  tiles: Tile[],
   size: number
 }
 
 export function Arrow(props: ArrowProps) {
-  const { points, size } = props
+  const { tiles, size } = props
+
+  const points = useMemo<Position[]>(() => tiles.map(tile => new Position(tile.col, tile.row)), [tiles])
 
   if (points.length < 2) return null
 
