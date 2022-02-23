@@ -57,6 +57,9 @@ export class Tile extends Shape {
     this.col = Tile.handleSetter(col, this.col)
     this.row = Tile.handleSetter(row, this.row)
 
+    this.x = this.col * this.width
+    this.y = this.row * this.width
+
     this.transitionStartRow = transitionStartRow ?? this.row
 
     this.computeHitbox()
