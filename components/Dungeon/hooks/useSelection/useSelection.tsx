@@ -4,10 +4,11 @@ import { Position, Tile } from '@classes'
 
 export interface SelectionOptions {
   tiles: Tile[]
+  onTouchEnd?: (tile: Tile[]) => void
 }
 
 export function useSelection(options: SelectionOptions) {
-  const { tiles } = options
+  const { tiles, onTouchEnd } = options
 
   const [selectedTiles, setSelectedTiles] = useState<Tile[]>([])
   const lastSelectedTile = useMemo<Tile>(() => selectedTiles[selectedTiles.length-1], [selectedTiles])
@@ -37,8 +38,9 @@ export function useSelection(options: SelectionOptions) {
   }, [tiles, handleTileSelect])
 
   const handleTouchEnd = useCallback(() => {
+    onTouchEnd?.(selectedTiles)
     setSelectedTiles([])
-  }, [])
+  }, [onTouchEnd, selectedTiles])
 
   return {
     onTouchMove: handleTouchMove,

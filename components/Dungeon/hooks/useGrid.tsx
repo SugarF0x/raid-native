@@ -12,6 +12,8 @@ export function useGrid() {
   }, [tileSize])
 
   const handleTileDeletion = useCallback((selectedTiles: Tile[]) => {
+    if (selectedTiles.length < 3) return
+
     const newTiles = [...tiles]
 
     // remove selected tiles

@@ -23,7 +23,7 @@ const HitboxArea = styled.View`
 
 export const Dungeon = () => {
   const { setTileSize, tileSize, tiles, handleTileDeletion } = useGrid()
-  const { selectedTiles, onTouchEnd, onTouchMove } = useSelection({ tiles })
+  const { selectedTiles, onTouchEnd, onTouchMove } = useSelection({ tiles, onTouchEnd: handleTileDeletion })
   const { panResponder } = useTouch({ onTouchEnd, onTouchMove })
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
@@ -43,7 +43,7 @@ export const Dungeon = () => {
         size={tileSize}
         tiles={selectedTiles}
       />
-      <HitboxArea {...panResponder.current.panHandlers} onTouchStart={() => handleTileDeletion([ tiles[0], tiles[2], tiles[7] ])}/>
+      <HitboxArea {...panResponder.current.panHandlers} />
     </DungeonWrapper>
   )
 }
