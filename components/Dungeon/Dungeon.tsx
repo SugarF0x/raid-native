@@ -35,7 +35,7 @@ export const Dungeon = () => {
     <DungeonWrapper onLayout={handleLayout}>
       {tiles.map((tile) => (
         <TileComponent
-          key={tile.color}
+          key={tile.id}
           meta={tile}
         />
       ))}

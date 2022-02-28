@@ -19,6 +19,8 @@ module.exports = function(api) {
             '@consts': './consts/',
             '@classes/': './classes/*',
             '@classes': './classes/',
+            '@assets/': './assets/*',
+            '@assets': './assets/',
           }
         }
       ]

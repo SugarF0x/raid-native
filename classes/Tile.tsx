@@ -3,21 +3,12 @@ import { Position, SetPosArgType } from '@classes/Position'
 
 const HITBOX_MARGIN_PERCENT = .1
 
-function getRandomColor() {
-  let letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
-
 export class Tile extends Shape {
   col: number
   row: number
   transitionStartRow: number
   hitbox!: Shape
-  color: string
+  id: number
 
   constructor(tile: Tile);
   constructor(column: number, row: number, transitionStartRow: number, size: number);
@@ -29,7 +20,7 @@ export class Tile extends Shape {
       this.row = ct.row
       this.transitionStartRow = ct.transitionStartRow
       this.hitbox = ct.hitbox
-      this.color = ct.color
+      this.id = ct.id
     } else {
       super(ct * s!, r! * s!, s!, s!)
 
@@ -39,7 +30,7 @@ export class Tile extends Shape {
 
       this.computeHitbox()
 
-      this.color = getRandomColor()
+      this.id = Math.floor(Math.random() * 1000000)
     }
   }
 

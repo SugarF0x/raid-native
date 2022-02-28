@@ -1,8 +1,9 @@
 import styled from 'styled-components/native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Animated } from 'react-native'
 import { useTranslation } from '@components/Dungeon/Tile/hooks'
 import { Position, Tile as TileClass } from '@classes'
+import { coins } from '@assets/svgs'
 
 export interface TileMeta {
   position: Position
@@ -12,16 +13,18 @@ export interface TileMeta {
 
 interface TileComponentProps {
   size: number
-  color: string
   col: number
+  children: React.ReactNode
 }
 
 const TileComponent = styled(Animated.View)<TileComponentProps>`
   position: absolute;
   width: ${props => props.size}px;
   height: ${props => props.size}px;
-  background-color: ${props => props.color};
   left: ${props => props.col * props.size}px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 interface TileProps {
@@ -30,7 +33,9 @@ interface TileProps {
 
 export const Tile = (props: TileProps) => {
   const { meta } = props
-  const { col, row, color, transitionStartRow, width: size } = meta
+  const { col, row, id, transitionStartRow, width: size } = meta
+
+  const Coin = useMemo(() => coins[id % coins.length], [id])
 
   const { translationAnimTiming, topOffset } = useTranslation({ size, position: row, initialPosition: transitionStartRow })
   const [currentRow, setCurrentRow] = useState(transitionStartRow)
@@ -46,7 +51,6 @@ export const Tile = (props: TileProps) => {
   return (
     <TileComponent
       col={col}
-      color={color}
       size={size}
       style={{
         transform: [
@@ -54,6 +58,8 @@ export const Tile = (props: TileProps) => {
           { perspective: 1000 }
         ]
       }}
-    />
+    >
+      <Coin />
+    </TileComponent>
   )
 }

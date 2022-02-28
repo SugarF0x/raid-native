@@ -1,0 +1,1 @@
+export { default as coins } from './coins'
