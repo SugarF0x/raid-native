@@ -15,6 +15,7 @@ const DungeonWrapper = styled.View`
 
 const HitboxArea = styled.View`
   position: absolute;
+  background-color: rgba(255,255,255,0.001);
   top: 0;
   left: 0;
   width: 100%;
