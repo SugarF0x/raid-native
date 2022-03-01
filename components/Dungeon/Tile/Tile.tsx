@@ -1,6 +1,6 @@
 import styled from 'styled-components/native'
-import React, { useEffect, useMemo, useState } from 'react'
-import { Animated } from 'react-native'
+import React, { useMemo } from 'react'
+import Animated from 'react-native-reanimated'
 import { useTranslation } from '@components/Dungeon/Tile/hooks'
 import { Position, Tile as TileClass } from '@classes'
 import { coins } from '@assets/svgs'
@@ -37,27 +37,13 @@ export const Tile = (props: TileProps) => {
 
   const Coin = useMemo(() => coins[id % coins.length], [id])
 
-  const { translationAnimTiming, topOffset } = useTranslation({ size, position: row, initialPosition: transitionStartRow })
-  const [currentRow, setCurrentRow] = useState(transitionStartRow)
-
-  useEffect(() => {
-    if (row <= currentRow) return
-
-    translationAnimTiming.start(() => {
-      setCurrentRow(row)
-    })
-  }, [row])
+  const { animation } = useTranslation({ size, position: row, initialPosition: transitionStartRow })
 
   return (
     <TileComponent
       col={col}
       size={size}
-      style={{
-        transform: [
-          { translateY: topOffset },
-          { perspective: 1000 }
-        ]
-      }}
+      style={animation}
     >
       <Coin />
     </TileComponent>

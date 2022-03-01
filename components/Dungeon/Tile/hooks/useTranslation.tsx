@@ -1,7 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Animated, Easing } from 'react-native'
+import { useEffect, useMemo } from 'react'
+import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-export const TRANSLATION_DURATION = 1000
+export const TILE_ANIMATION_CONFIG = {
+  duration: 1000,
+  easing: Easing.bezier(0.5, 0.01, 0, 1),
+}
 
 export interface UseTranslationOptions {
   position: number
@@ -12,27 +15,18 @@ export interface UseTranslationOptions {
 export function useTranslation(options: UseTranslationOptions) {
   const { position, initialPosition, size } = options
 
-  const [topOffset, setTopOffset] = useState(initialPosition * size)
-  const expectedTopOffset = useMemo(() => position * size, [size, position])
+  const expectedOffset = useMemo(() => position * size, [size, position])
 
-  const translationAnimation = useRef(new Animated.Value(topOffset))
-  const translationAnimTiming = useMemo(() => Animated.timing(translationAnimation.current, {
-    toValue: expectedTopOffset,
-    duration: TRANSLATION_DURATION,
-    easing: Easing.inOut(Easing.cubic),
-    useNativeDriver: false
-  }), [expectedTopOffset])
+  const y = useSharedValue(initialPosition * size)
+  const animation = useAnimatedStyle(() => ({
+    top: withTiming(y.value, TILE_ANIMATION_CONFIG)
+  }))
 
   useEffect(() => {
-    translationAnimation.current.addListener(({ value }) => { setTopOffset(value) })
-
-    return () => {
-      translationAnimation.current.removeAllListeners()
-    }
-  }, [])
+    if (y.value < expectedOffset) y.value = expectedOffset
+  }, [expectedOffset])
 
   return {
-    topOffset,
-    translationAnimTiming
+    animation
   }
 }
