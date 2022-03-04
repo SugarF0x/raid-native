@@ -13,12 +13,10 @@ export function useSelection(options: SelectionOptions) {
   const [selectedTiles, setSelectedTiles] = useState<Tile[]>([])
   const lastSelectedTile = useMemo<Tile>(() => selectedTiles[selectedTiles.length-1], [selectedTiles])
   const previousSelectedTile = useMemo<Tile>(() => selectedTiles[selectedTiles.length-2], [selectedTiles])
+  const lastSelectedAdjacentTiles = useMemo(() => !lastSelectedTile ? tiles : tiles.filter(tile => tile.isNear(lastSelectedTile)), [lastSelectedTile, tiles])
 
   const handleTileSelect = useCallback((tile: Tile) => {
-    const isValid = [
-      !lastSelectedTile || tile.isNear(lastSelectedTile),
-      !selectedTiles || isNotSelected(tile, selectedTiles)
-    ].every(Boolean)
+    const isValid = !selectedTiles || isNotSelected(tile, selectedTiles)
 
     if (!isValid) return
 
@@ -32,10 +30,10 @@ export function useSelection(options: SelectionOptions) {
   }, [selectedTiles, lastSelectedTile, previousSelectedTile])
 
   const handleTouchMove = useCallback((pos: Position) => {
-    const hitTile = tiles.find(tile => tile.hitbox.isWithin(pos))
-    if (!hitTile) return
+    const hitTile = lastSelectedAdjacentTiles.find(tile => tile.hitbox.isWithin(pos))
+    if (!hitTile || hitTile === lastSelectedTile) return
     handleTileSelect(hitTile)
-  }, [tiles, handleTileSelect])
+  }, [lastSelectedAdjacentTiles, handleTileSelect])
 
   const handleTouchEnd = useCallback(() => {
     onTouchEnd?.(selectedTiles)

@@ -3,6 +3,7 @@ import React from 'react';
 import styled from "styled-components/native"
 import { NativeRouter, Routes, Route } from "react-router-native"
 import { routes } from "./routes"
+import 'react-native-console-time-polyfill';
 
 const Wrapper = styled.View`
   

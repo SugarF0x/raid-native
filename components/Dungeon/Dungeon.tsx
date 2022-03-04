@@ -44,7 +44,7 @@ export const Dungeon = () => {
         size={tileSize}
         tiles={selectedTiles}
       />
-      <HitboxArea {...panResponder.current.panHandlers} />
+      <HitboxArea {...panResponder.panHandlers} />
     </DungeonWrapper>
   )
 }
