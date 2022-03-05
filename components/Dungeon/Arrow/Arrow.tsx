@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react'
 import Svg from 'react-native-svg'
-import { Position, Tile } from '@classes'
+import { Position, TileBase } from '@classes'
 import { Arrowhead } from '@components/Dungeon/Arrow/Arrowhead'
 import { Outline, Inline } from '@components/Dungeon/Arrow/Line'
 import { View } from 'react-native'
 
 export interface ArrowProps {
-  tiles: Tile[],
+  tiles: TileBase[],
   size: number
 }
 

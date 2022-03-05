@@ -1,21 +1,21 @@
 import { useCallback, useMemo, useState } from 'react'
 import { isNotSelected } from './validators'
-import { Position, Tile } from '@classes'
+import { Position, TileBase } from '@classes'
 
 export interface SelectionOptions {
-  tiles: Tile[]
-  onTouchEnd?: (tile: Tile[]) => void
+  tiles: TileBase[]
+  onTouchEnd?: (tile: TileBase[]) => void
 }
 
 export function useSelection(options: SelectionOptions) {
   const { tiles, onTouchEnd } = options
 
-  const [selectedTiles, setSelectedTiles] = useState<Tile[]>([])
-  const lastSelectedTile = useMemo<Tile>(() => selectedTiles[selectedTiles.length-1], [selectedTiles])
-  const previousSelectedTile = useMemo<Tile>(() => selectedTiles[selectedTiles.length-2], [selectedTiles])
+  const [selectedTiles, setSelectedTiles] = useState<TileBase[]>([])
+  const lastSelectedTile = useMemo<TileBase>(() => selectedTiles[selectedTiles.length-1], [selectedTiles])
+  const previousSelectedTile = useMemo<TileBase>(() => selectedTiles[selectedTiles.length-2], [selectedTiles])
   const lastSelectedAdjacentTiles = useMemo(() => !lastSelectedTile ? tiles : tiles.filter(tile => tile.isNear(lastSelectedTile)), [lastSelectedTile, tiles])
 
-  const handleTileSelect = useCallback((tile: Tile) => {
+  const handleTileSelect = useCallback((tile: TileBase) => {
     const isValid = !selectedTiles || isNotSelected(tile, selectedTiles)
 
     if (!isValid) return
