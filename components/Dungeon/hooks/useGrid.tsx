@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Position, Tile } from '@classes'
+import { Position, Tile, Coin } from '@classes'
 
 export function useGrid() {
   const [tileSize, setTileSize] = useState(0)
@@ -8,7 +8,7 @@ export function useGrid() {
   /** initially populate grid */
   useEffect(() => {
     if (!tiles.length && tileSize)
-      setTiles(Array(6).fill(0).flatMap((_, col) => Array(6).fill(0).map((_, row) => new Tile({ col, row, transitionStartRow: row-6, size: tileSize }))))
+      setTiles(Array(6).fill(0).flatMap((_, col) => Array(6).fill(0).map((_, row) => new Coin({ col, row, transitionStartRow: row-6, size: tileSize }))))
   }, [tileSize])
 
   const handleTileDeletion = useCallback((selectedTiles: Tile[]) => {
@@ -20,6 +20,7 @@ export function useGrid() {
     selectedTiles.forEach(tile => {
       const tileIndex = newTiles.indexOf(tile!)
       newTiles.splice(tileIndex, 1)
+      tile.onCollect()
     })
 
     // move hovering tiles downwards
@@ -42,7 +43,7 @@ export function useGrid() {
     for (let col = 0; col < 6; col++) {
       const newTilesRequired = 6 - newTiles.filter(tile => tile.col === col).length
       for (let row = -1; row >= newTilesRequired * (-1); row--) {
-        newTiles.push(new Tile({ col: col, row: newTilesRequired + row, transitionStartRow: row, size: tileSize }))
+        newTiles.push(new Coin({ col: col, row: newTilesRequired + row, transitionStartRow: row, size: tileSize }))
       }
     }
 

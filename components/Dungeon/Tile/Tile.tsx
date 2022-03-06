@@ -2,14 +2,7 @@ import styled from 'styled-components/native'
 import React, { useMemo } from 'react'
 import Animated from 'react-native-reanimated'
 import { useTranslation } from '@components/Dungeon/Tile/hooks'
-import { Position, Tile as TileClass } from '@classes'
-import coins from '@classes/tiles/Coin/assets/svgs'
-
-export interface TileMeta {
-  position: Position
-  // other stuff like tile type and shit will go here
-  // this will also be used to save/load game states
-}
+import { Tile as TileClass } from '@classes'
 
 interface TileComponentProps {
   size: number
@@ -35,7 +28,7 @@ export const Tile = (props: TileProps) => {
   const { meta } = props
   const { col, row, id, transitionStartRow, width: size } = meta
 
-  const Coin = useMemo(() => coins[id % coins.length], [id])
+  const Svg = useMemo(() => meta.svg, [id])
 
   const { animation } = useTranslation({ size, position: row, initialPosition: transitionStartRow })
 
@@ -45,7 +38,7 @@ export const Tile = (props: TileProps) => {
       size={size}
       style={animation}
     >
-      <Coin />
+      <Svg />
     </TileComponent>
   )
 }

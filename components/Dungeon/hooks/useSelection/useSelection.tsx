@@ -22,9 +22,11 @@ export function useSelection(options: SelectionOptions) {
 
     if (previousSelectedTile && Position.isSame(tile, previousSelectedTile)) {
       const newSelection = [...selectedTiles]
-      newSelection.pop()
+      const deselectedTile = newSelection.pop()
+      deselectedTile?.onDeselect()
       setSelectedTiles(newSelection)
     } else {
+      tile.onSelect()
       setSelectedTiles([...selectedTiles, tile])
     }
   }, [selectedTiles, lastSelectedTile, previousSelectedTile])

@@ -1,5 +1,7 @@
 import { Shape } from '@classes/Shape'
 import { Position, SetPosArgType } from '@classes/Position'
+import React from 'react'
+import { SvgProps } from 'react-native-svg'
 
 const HITBOX_MARGIN_PERCENT = .1
 
@@ -10,18 +12,15 @@ export interface TileOptions {
   size: number
 }
 
-export class Tile extends Shape {
+export abstract class Tile extends Shape {
   col: number
   row: number
   transitionStartRow: number
   id: number
   hitbox: Shape
 
-  constructor(options: TileOptions | Tile) {
+  protected constructor(options: TileOptions | Tile) {
     const { col, row, transitionStartRow } = options
-
-    // @ts-ignore, this will be fixed in TS 4.6
-    this.col = col; this.row = row; this.transitionStartRow = transitionStartRow;
 
     if (options instanceof Tile) {
       const { x, y, width, height, id, hitbox } = options
@@ -30,10 +29,15 @@ export class Tile extends Shape {
       this.hitbox = hitbox
     } else {
       const { size } = options
-      super({ x: col * size!, y: row * size, width: size, height: size })
+      const [x, y] = [col * size, row * size]
+      super({ x: col * size, y: row * size, width: size, height: size })
       this.id = Tile.getNewId()
-      this.hitbox = this.getNewHitbox()
+      this.hitbox = Tile.getNewHitbox(x, y, size)
     }
+
+    this.col = col;
+    this.row = row;
+    this.transitionStartRow = transitionStartRow;
   }
 
   isNear(target: Tile): boolean {
@@ -64,14 +68,7 @@ export class Tile extends Shape {
   }
 
   getNewHitbox(): Shape {
-    const offset = this.width * HITBOX_MARGIN_PERCENT
-    const { x, y, width, height } = this
-    return new Shape({
-      x: x + offset,
-      y: y + offset,
-      width: width - offset * 2,
-      height: height - offset * 2
-    })
+    return Tile.getNewHitbox(this.x, this.y, this.width)
   }
 
   updateHitbox() {
@@ -98,7 +95,25 @@ export class Tile extends Shape {
     return foo === bar
   }
 
+  static getNewHitbox(x: number, y: number, size: number): Shape {
+    const offset = size * HITBOX_MARGIN_PERCENT
+    return new Shape({
+      x: x + offset,
+      y: y + offset,
+      width: size - offset * 2,
+      height: size - offset * 2
+    })
+  }
+
   static getNewId(): number {
     return Math.floor(Math.random() * 1000000)
   }
+
+  abstract selectSound: any
+  abstract collectSound: any
+  abstract svg: React.FC<SvgProps>
+
+  abstract onSelect(): void
+  abstract onDeselect(): void
+  abstract onCollect(): void
 }
