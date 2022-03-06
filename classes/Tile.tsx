@@ -3,34 +3,36 @@ import { Position, SetPosArgType } from '@classes/Position'
 
 const HITBOX_MARGIN_PERCENT = .1
 
+export interface TileOptions {
+  col: number
+  row: number
+  transitionStartRow: number
+  size: number
+}
+
 export class Tile extends Shape {
   col: number
   row: number
   transitionStartRow: number
-  hitbox!: Shape
   id: number
+  hitbox: Shape
 
-  constructor(tile: Tile);
-  constructor(column: number, row: number, transitionStartRow: number, size: number);
-  constructor(ct: Tile | number, r?: number, t?: number, s?: number) {
-    if (ct instanceof Tile) {
-      super(ct.x, ct.y, ct.width, ct.height)
+  constructor(options: TileOptions | Tile) {
+    const { col, row, transitionStartRow } = options
 
-      this.col = ct.col
-      this.row = ct.row
-      this.transitionStartRow = ct.transitionStartRow
-      this.hitbox = ct.hitbox
-      this.id = ct.id
+    // @ts-ignore, this will be fixed in TS 4.6
+    this.col = col; this.row = row; this.transitionStartRow = transitionStartRow;
+
+    if (options instanceof Tile) {
+      const { x, y, width, height, id, hitbox } = options
+      super({ x, y, width, height })
+      this.id = id
+      this.hitbox = hitbox
     } else {
-      super(ct * s!, r! * s!, s!, s!)
-
-      this.col = ct!
-      this.row = r!
-      this.transitionStartRow = t!
-
-      this.computeHitbox()
-
-      this.id = Math.floor(Math.random() * 1000000)
+      const { size } = options
+      super({ x: col * size!, y: row * size, width: size, height: size })
+      this.id = Tile.getNewId()
+      this.hitbox = this.getNewHitbox()
     }
   }
 
@@ -53,17 +55,27 @@ export class Tile extends Shape {
 
     this.transitionStartRow = transitionStartRow ?? this.row
 
-    this.computeHitbox()
+    this.updateHitbox()
   }
 
   setSize(w: SetPosArgType, h: SetPosArgType) {
     super.setSize(w, h)
-    this.computeHitbox()
+    this.updateHitbox()
   }
 
-  computeHitbox() {
+  getNewHitbox(): Shape {
     const offset = this.width * HITBOX_MARGIN_PERCENT
-    this.hitbox = new Shape(this.x + offset, this.y + offset, this.width - offset * 2, this.height - offset * 2)
+    const { x, y, width, height } = this
+    return new Shape({
+      x: x + offset,
+      y: y + offset,
+      width: width - offset * 2,
+      height: height - offset * 2
+    })
+  }
+
+  updateHitbox() {
+    this.hitbox = this.getNewHitbox()
   }
 
   toString(): string {
@@ -84,5 +96,9 @@ export class Tile extends Shape {
     else bar = tile2.toString()
 
     return foo === bar
+  }
+
+  static getNewId(): number {
+    return Math.floor(Math.random() * 1000000)
   }
 }

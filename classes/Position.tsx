@@ -1,19 +1,19 @@
 export type SetPosArgType = null | number | ((val: number) => number)
 
+export interface PositionOptions {
+  x: number
+  y: number
+}
+
 export class Position {
   x: number
   y: number
 
-  constructor(pos: Position);
-  constructor(x: number, y: number);
-  constructor(xp: number | Position, y?: number) {
-    if (xp instanceof Position) {
-      this.x = xp.x
-      this.y = xp.y
-    } else {
-      this.x = xp
-      this.y = y!
-    }
+  constructor(options: PositionOptions) {
+    const { x, y } = options
+
+    this.x = x
+    this.y = y
   }
 
   setPos(x: SetPosArgType, y: SetPosArgType) {

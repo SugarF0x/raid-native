@@ -1,21 +1,21 @@
-import { Position, SetPosArgType } from '@classes/Position'
+import { Position, PositionOptions, SetPosArgType } from '@classes/Position'
+
+export interface ShapeOptions extends PositionOptions {
+  width: number
+  height: number
+}
 
 export class Shape extends Position {
   width: number
   height: number
 
-  constructor(s: Shape);
-  constructor(x: number, y: number, w: number, h: number);
-  constructor(xs: Shape | number, y?: number, w?: number, h?: number) {
-    if (xs instanceof Shape) {
-      super(xs.x, xs.y)
-      this.width = xs.width
-      this.height = xs.height
-    } else {
-      super(xs, y!)
-      this.width = w!
-      this.height = h!
-    }
+  constructor(options: ShapeOptions) {
+    const { x, y, width, height } = options
+
+    super({ x, y })
+
+    this.width = width
+    this.height = height
   }
 
   setSize(w: SetPosArgType, h: SetPosArgType) {

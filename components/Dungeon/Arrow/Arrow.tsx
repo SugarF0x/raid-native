@@ -13,7 +13,7 @@ export interface ArrowProps {
 export function Arrow(props: ArrowProps) {
   const { tiles, size } = props
 
-  const points = useMemo<Position[]>(() => tiles.map(tile => new Position(tile.col, tile.row)), [tiles])
+  const points = useMemo<Position[]>(() => tiles.map(tile => new Position({ x: tile.col, y: tile.row })), [tiles])
 
   if (points.length < 2) return null
 
