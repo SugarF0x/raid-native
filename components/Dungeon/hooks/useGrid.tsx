@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Position, TileBase } from '@classes'
+import { Position, Tile } from '@classes'
 
 export function useGrid() {
   const [tileSize, setTileSize] = useState(0)
-  const [tiles, setTiles] = useState<TileBase[]>([])
+  const [tiles, setTiles] = useState<Tile[]>([])
 
   /** initially populate grid */
   useEffect(() => {
     if (!tiles.length && tileSize)
-      setTiles(Array(6).fill(0).flatMap((_, col) => Array(6).fill(0).map((_, row) => new TileBase(col, row, row-6, tileSize))))
+      setTiles(Array(6).fill(0).flatMap((_, col) => Array(6).fill(0).map((_, row) => new Tile(col, row, row-6, tileSize))))
   }, [tileSize])
 
-  const handleTileDeletion = useCallback((selectedTiles: TileBase[]) => {
+  const handleTileDeletion = useCallback((selectedTiles: Tile[]) => {
     if (selectedTiles.length < 3) return
 
     const newTiles = [...tiles]
@@ -42,7 +42,7 @@ export function useGrid() {
     for (let col = 0; col < 6; col++) {
       const newTilesRequired = 6 - newTiles.filter(tile => tile.col === col).length
       for (let row = -1; row >= newTilesRequired * (-1); row--) {
-        newTiles.push(new TileBase(col, newTilesRequired + row, row, tileSize))
+        newTiles.push(new Tile(col, newTilesRequired + row, row, tileSize))
       }
     }
 

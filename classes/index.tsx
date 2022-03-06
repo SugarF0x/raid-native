@@ -1,3 +1,3 @@
 export * from './Position'
 export * from './Shape'
-export * from './TileBase'
+export * from './Tile'

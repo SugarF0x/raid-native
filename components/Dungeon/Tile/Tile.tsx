@@ -2,7 +2,7 @@ import styled from 'styled-components/native'
 import React, { useMemo } from 'react'
 import Animated from 'react-native-reanimated'
 import { useTranslation } from '@components/Dungeon/Tile/hooks'
-import { Position, TileBase as TileClass } from '@classes'
+import { Position, Tile as TileClass } from '@classes'
 import coins from '@classes/tiles/Coin/assets/svgs'
 
 export interface TileMeta {

@@ -3,17 +3,17 @@ import { Position, SetPosArgType } from '@classes/Position'
 
 const HITBOX_MARGIN_PERCENT = .1
 
-export class TileBase extends Shape {
+export class Tile extends Shape {
   col: number
   row: number
   transitionStartRow: number
   hitbox!: Shape
   id: number
 
-  constructor(tile: TileBase);
+  constructor(tile: Tile);
   constructor(column: number, row: number, transitionStartRow: number, size: number);
-  constructor(ct: TileBase | number, r?: number, t?: number, s?: number) {
-    if (ct instanceof TileBase) {
+  constructor(ct: Tile | number, r?: number, t?: number, s?: number) {
+    if (ct instanceof Tile) {
       super(ct.x, ct.y, ct.width, ct.height)
 
       this.col = ct.col
@@ -34,7 +34,7 @@ export class TileBase extends Shape {
     }
   }
 
-  isNear(target: TileBase): boolean {
+  isNear(target: Tile): boolean {
     const { col: col1, row: row1 } = this
     const { col: col2, row: row2 } = target
 
@@ -45,8 +45,8 @@ export class TileBase extends Shape {
   }
 
   setTilePos(col: SetPosArgType, row: SetPosArgType, transitionStartRow?: number) {
-    this.col = TileBase.handleSetter(col, this.col)
-    this.row = TileBase.handleSetter(row, this.row)
+    this.col = Tile.handleSetter(col, this.col)
+    this.row = Tile.handleSetter(row, this.row)
 
     this.x = this.col * this.width
     this.y = this.row * this.width
@@ -70,17 +70,17 @@ export class TileBase extends Shape {
     return [super.toString(), this.col, this.row].join('-')
   }
 
-  isSameDungeonPosition(target: TileBase | Position): boolean {
-    return TileBase.isSameDungeonPosition(this, target)
+  isSameDungeonPosition(target: Tile | Position): boolean {
+    return Tile.isSameDungeonPosition(this, target)
   }
 
-  static isSameDungeonPosition(tile1: TileBase | Position, tile2: TileBase | Position): boolean {
+  static isSameDungeonPosition(tile1: Tile | Position, tile2: Tile | Position): boolean {
     let foo, bar
 
-    if (tile1 instanceof TileBase) foo = [tile1.col, tile1.row].join('-')
+    if (tile1 instanceof Tile) foo = [tile1.col, tile1.row].join('-')
     else foo = tile1.toString()
 
-    if (tile2 instanceof TileBase) bar = [tile2.col, tile2.row].join('-')
+    if (tile2 instanceof Tile) bar = [tile2.col, tile2.row].join('-')
     else bar = tile2.toString()
 
     return foo === bar
