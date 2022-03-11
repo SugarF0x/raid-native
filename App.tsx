@@ -1,17 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import styled from "styled-components/native"
 import { NativeRouter, Routes, Route } from "react-router-native"
 import { routes } from "./routes"
 import 'react-native-console-time-polyfill';
-
-const Wrapper = styled.View`
-  
-`
+import { View } from 'react-native'
 
 export default function App() {
   return (
-    <Wrapper>
+    <View>
       <NativeRouter>
         <Routes>
           {routes.map(Screen => (
@@ -20,6 +16,6 @@ export default function App() {
         </Routes>
       </NativeRouter>
       <StatusBar />
-    </Wrapper>
+    </View>
   );
 }
