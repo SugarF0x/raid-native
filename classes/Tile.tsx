@@ -13,6 +13,12 @@ export interface TileOptions {
 }
 
 export abstract class Tile extends Shape {
+  abstract svg: React.FC<SvgProps>
+
+  abstract onSelect(): void
+  abstract onDeselect(): void
+  abstract onCollect(): void
+
   col: number
   row: number
   transitionStartRow: number
@@ -108,12 +114,4 @@ export abstract class Tile extends Shape {
   static getNewId(): number {
     return Math.floor(Math.random() * 1000000)
   }
-
-  abstract selectSound: any
-  abstract collectSound: any
-  abstract svg: React.FC<SvgProps>
-
-  abstract onSelect(): void
-  abstract onDeselect(): void
-  abstract onCollect(): void
 }
