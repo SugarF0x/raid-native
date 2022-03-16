@@ -1,3 +1,3 @@
 export * from './types'
-export * from './toString'
-export * from './isSame'
+export * from './toStringPosition'
+export * from './isSamePosition'
