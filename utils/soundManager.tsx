@@ -13,5 +13,6 @@ function soundUnloader(res: { sound: Sound, status: AVPlaybackStatus }) {
 }
 
 export function playSound(sound: AVPlaybackNativeSource) {
-  return Audio.Sound.createAsync(sound, options).then(soundUnloader).catch(errorCatcher)
+  if (process.env.NODE_ENV === 'development') return
+  Audio.Sound.createAsync(sound, options).then(soundUnloader).catch(errorCatcher)
 }
