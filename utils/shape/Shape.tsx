@@ -1,4 +1,4 @@
-import Position from '@utils/position/types'
+import Position from '@utils/position/Position'
 
 export default interface Shape extends Position {
   width: number

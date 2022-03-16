@@ -1,5 +1,5 @@
-import Position from '@utils/position/types'
-import Shape from '@utils/shape/types'
+import Position from '@utils/position/Position'
+import Shape from './Shape'
 
 export default function isPosWithinShape(shape: Shape, pos: Position): boolean {
   const { x: sx, y: sy, width, height } = shape
