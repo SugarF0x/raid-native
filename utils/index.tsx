@@ -1,2 +1,6 @@
 export * from './getWithHocDisplayName'
 export * from './soundManager'
+export * from './numberSetter'
+export * from './position'
+// export * from './shape'
+// export * from './tile'
