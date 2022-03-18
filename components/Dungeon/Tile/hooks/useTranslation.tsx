@@ -19,7 +19,9 @@ export function useTranslation(options: UseTranslationOptions) {
 
   const y = useSharedValue(initialPosition * size)
   const animation = useAnimatedStyle(() => ({
-    top: withTiming(y.value, TILE_ANIMATION_CONFIG)
+    transform: [
+      { translateY: withTiming(y.value, TILE_ANIMATION_CONFIG) }
+    ]
   }))
 
   useEffect(() => {
