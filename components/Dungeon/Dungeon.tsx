@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Arrow } from './Arrow'
-import { Tile as TileComponent } from './Tile'
+import { DungeonTile } from './Tile'
 import { LayoutChangeEvent } from 'react-native'
 import styled from 'styled-components/native'
 import { useSelection, useTouch, useGrid } from './hooks'
@@ -23,8 +23,8 @@ const HitboxArea = styled.View`
 `
 
 export const Dungeon = () => {
-  const { setTileSize, tileSize, tiles, handleTileDeletion } = useGrid()
-  const { selectedTiles, onTouchEnd, onTouchMove } = useSelection({ tiles, onTouchEnd: handleTileDeletion })
+  const { setTileSize, tileSize, tiles, tileRefs, handleTileDeletion } = useGrid()
+  const { selectedTiles, onTouchEnd, onTouchMove } = useSelection({ tiles, onTouchEnd: handleTileDeletion, size: tileSize, tileRefs})
   const { panResponder } = useTouch({ onTouchEnd, onTouchMove })
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
@@ -34,10 +34,12 @@ export const Dungeon = () => {
 
   return (
     <DungeonWrapper onLayout={handleLayout}>
-      {tiles.map((tile) => (
-        <TileComponent
-          key={tile.id}
-          meta={tile}
+      {tiles.map((tile, index) => (
+        <DungeonTile
+          key={index}
+          size={tileSize}
+          tile={tile}
+          tileRefs={tileRefs}
         />
       ))}
       <Arrow

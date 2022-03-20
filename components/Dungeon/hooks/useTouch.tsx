@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Position } from '@classes'
+import { Position } from '@utils'
 import { GestureResponderEvent, PanResponder } from 'react-native'
 
 export interface TouchOptions {
@@ -14,7 +14,7 @@ export function useTouch(options: TouchOptions) {
     onMoveShouldSetPanResponder: () => true,
     onPanResponderMove: (e: GestureResponderEvent) => {
       const { locationX: x, locationY: y } = e.nativeEvent
-      onTouchMove(new Position({ x, y }))
+      onTouchMove({ x, y })
     },
     onPanResponderEnd: () => {
       onTouchEnd()

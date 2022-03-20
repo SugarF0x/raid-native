@@ -1,7 +1,9 @@
 import Position from '@utils/position/Position'
 import Shape from './Shape'
 
-export function isPosWithinShape(shape: Shape, pos: Position): boolean {
+export function isPosWithinShape(shape: Shape | undefined, pos: Position): boolean {
+  if (!shape) return false
+
   const { x: sx, y: sy, width, height } = shape
   const { x: px, y: py } = pos
   return (

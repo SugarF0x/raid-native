@@ -1,6 +1,8 @@
 import { Tile } from './types'
 
-export function isSameDungeonPosition(tile1: Tile, tile2: Tile): boolean {
+type TilePosProps = Pick<Tile, 'col' | 'row'>
+
+export function isSameDungeonPosition(tile1: TilePosProps, tile2: TilePosProps): boolean {
   return (
     tile1.col === tile2.col
     && tile1.row === tile2.row

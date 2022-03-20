@@ -1,15 +1,24 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Position, Tile, Coin } from '@classes'
+import { useCallback, useRef, useState } from 'react'
+import { isSameDungeonPosition, Tile, TileRefs, TileType } from '@utils'
+
+function getInitialTiles(): Tile[] {
+  return (
+    Array(6).fill(0)
+    .flatMap((_, col) =>
+      Array(6).fill(0)
+      .map<Tile>((_, row) => ({
+        col,
+        row,
+        type: TileType.COIN
+      }))
+    )
+  )
+}
 
 export function useGrid() {
   const [tileSize, setTileSize] = useState(0)
-  const [tiles, setTiles] = useState<Tile[]>([])
-
-  /** initially populate grid */
-  useEffect(() => {
-    if (!tiles.length && tileSize)
-      setTiles(Array(6).fill(0).flatMap((_, col) => Array(6).fill(0).map((_, row) => new Coin({ col, row, transitionStartRow: row-6, size: tileSize }))))
-  }, [tileSize])
+  const [tiles, setTiles] = useState<Tile[]>(getInitialTiles())
+  const tileRefs: TileRefs = useRef(new WeakMap())
 
   const handleTileDeletion = useCallback((selectedTiles: Tile[]) => {
     if (selectedTiles.length < 3) return
@@ -20,18 +29,19 @@ export function useGrid() {
     selectedTiles.forEach(tile => {
       const tileIndex = newTiles.indexOf(tile!)
       newTiles.splice(tileIndex, 1)
-      tile.onCollect()
+      tileRefs.current.get(tile)?.current?.collect()
     })
 
     // move hovering tiles downwards
     for (let col = 5; col >= 0; col--) {
       for (let row = 5; row >= 0; row--) {
         // if tile is empty - find next top tile and move to this position
-        if (!newTiles.find(tile => tile.isSameDungeonPosition(new Position({ x: col, y: row })))) {
+        if (!newTiles.find(tile => isSameDungeonPosition(tile, {col, row}))) {
           for (let checkRow = row - 1; checkRow >= 0; checkRow--) {
-            let nextTopTile = newTiles.find(tile => tile.isSameDungeonPosition(new Position({ x: col, y: checkRow })))
+            let nextTopTile = newTiles.find(tile => isSameDungeonPosition(tile, {col, row: checkRow}))
             if (nextTopTile) {
-              nextTopTile.setTilePos(col, row)
+              nextTopTile.col = col
+              nextTopTile.row = row
               break
             }
           }
@@ -43,7 +53,7 @@ export function useGrid() {
     for (let col = 0; col < 6; col++) {
       const newTilesRequired = 6 - newTiles.filter(tile => tile.col === col).length
       for (let row = -1; row >= newTilesRequired * (-1); row--) {
-        newTiles.push(new Coin({ col: col, row: newTilesRequired + row, transitionStartRow: row, size: tileSize }))
+        newTiles.push({ col: col, row: newTilesRequired + row, type: TileType.COIN })
       }
     }
 
@@ -54,6 +64,7 @@ export function useGrid() {
     tileSize,
     setTileSize,
     tiles,
+    tileRefs,
     handleTileDeletion
   }
 }
