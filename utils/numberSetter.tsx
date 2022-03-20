@@ -1,6 +1,6 @@
 export type NumberSetterArg = null | number | ((val: number) => number)
 
-export default function numberSetter(value: NumberSetterArg, initialValue: number): number {
+export function numberSetter(value: NumberSetterArg, initialValue: number): number {
   let newValue = initialValue
 
   if (typeof value === 'number') {
@@ -11,3 +11,5 @@ export default function numberSetter(value: NumberSetterArg, initialValue: numbe
 
   return newValue
 }
+
+export default numberSetter

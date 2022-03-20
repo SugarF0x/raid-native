@@ -16,3 +16,5 @@ export function playSound(sound: AVPlaybackNativeSource) {
   if (process.env.NODE_ENV === 'development') return
   Audio.Sound.createAsync(sound, options).then(soundUnloader).catch(errorCatcher)
 }
+
+export default playSound

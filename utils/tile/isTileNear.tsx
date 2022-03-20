@@ -1,6 +1,6 @@
-import Tile from './types'
+import { Tile } from './types'
 
-export default function isTileNear(tile1: Tile, tile2: Tile): boolean {
+export function isTileNear(tile1: Tile, tile2: Tile): boolean {
   const { col: col1, row: row1 } = tile1
   const { col: col2, row: row2 } = tile2
 
@@ -11,3 +11,5 @@ export default function isTileNear(tile1: Tile, tile2: Tile): boolean {
     && row2 <= row1 + 1
   )
 }
+
+export default isTileNear

@@ -14,3 +14,5 @@ export function getWithHocDisplayName(Component: React.FC<any>, name: string) {
 
   return `${displayName}With:[${name}]`
 }
+
+export default getWithHocDisplayName

@@ -1,4 +1,4 @@
-export default interface Tile {
+export interface Tile {
   col: number
   row: number
   type: TileType

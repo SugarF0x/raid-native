@@ -1,5 +1,7 @@
-import Tile from './types'
+import { Tile } from './types'
 
-export default function toStringTile(tile: Tile): string {
+export function toStringTile(tile: Tile): string {
   return `${tile.type}-${tile.col}-${tile.row}`
 }
+
+export default toStringTile
