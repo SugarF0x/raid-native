@@ -9,7 +9,8 @@ function getInitialTiles(): Tile[] {
       .map<Tile>((_, row) => ({
         col,
         row,
-        type: TileType.COIN
+        type: TileType.COIN,
+        id: Math.floor(Math.random() * 1000000)
       }))
     )
   )
@@ -53,7 +54,7 @@ export function useGrid() {
     for (let col = 0; col < 6; col++) {
       const newTilesRequired = 6 - newTiles.filter(tile => tile.col === col).length
       for (let row = -1; row >= newTilesRequired * (-1); row--) {
-        newTiles.push({ col: col, row: newTilesRequired + row, type: TileType.COIN })
+        newTiles.push({ col: col, row: newTilesRequired + row, type: TileType.COIN, id: Math.floor(Math.random() * 1000000) })
       }
     }
 

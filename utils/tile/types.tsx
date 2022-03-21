@@ -1,6 +1,7 @@
 import { MutableRefObject, RefObject } from 'react'
 
 export interface Tile {
+  id: number
   col: number
   row: number
   type: TileType

@@ -30,7 +30,7 @@ export const DungeonTile = (props: DungeonTileProps) => {
   const { tile, tileRefs, size } = props
   const { col, row, type } = tile
 
-  const { animation } = useTranslation({ size, position: row, initialPosition: -1 })
+  const { animation } = useTranslation({ size, position: row })
 
   const tileRef = useRef<TileRefImperative>(null)
 

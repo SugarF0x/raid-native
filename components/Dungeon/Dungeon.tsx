@@ -34,14 +34,18 @@ export const Dungeon = () => {
 
   return (
     <DungeonWrapper onLayout={handleLayout}>
-      {tiles.map((tile, index) => (
-        <DungeonTile
-          key={index}
-          size={tileSize}
-          tile={tile}
-          tileRefs={tileRefs}
-        />
-      ))}
+      {tileSize > 0 && (
+        <>
+          {tiles.map((tile) => (
+            <DungeonTile
+              key={tile.id}
+              size={tileSize}
+              tile={tile}
+              tileRefs={tileRefs}
+            />
+          ))}
+        </>
+      )}
       <Arrow
         size={tileSize}
         tiles={selectedTiles}

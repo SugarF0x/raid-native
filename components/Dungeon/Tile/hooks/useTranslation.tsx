@@ -8,16 +8,15 @@ export const TILE_ANIMATION_CONFIG = {
 
 export interface UseTranslationOptions {
   position: number
-  initialPosition: number
   size: number
 }
 
 export function useTranslation(options: UseTranslationOptions) {
-  const { position, initialPosition, size } = options
+  const { position, size } = options
 
   const expectedOffset = useMemo(() => position * size, [size, position])
 
-  const y = useSharedValue(initialPosition * size)
+  const y = useSharedValue((position - 6) * size)
   const animation = useAnimatedStyle(() => ({
     transform: [
       { translateY: withTiming(y.value, TILE_ANIMATION_CONFIG) }
