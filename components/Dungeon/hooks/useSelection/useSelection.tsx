@@ -58,7 +58,7 @@ export function useSelection(options: SelectionOptions) {
     const hitTile = lastSelectedAdjacentTiles.find(tile => isPosWithinShape(activeHitboxes.get(tile), pos))
     if (!hitTile || hitTile === lastSelectedTile) return
     handleTileSelect(hitTile)
-  }, [lastSelectedAdjacentTiles, handleTileSelect])
+  }, [lastSelectedAdjacentTiles, handleTileSelect, activeHitboxes])
 
   const handleTouchEnd = useCallback(() => {
     onTouchEnd?.(selectedTiles)

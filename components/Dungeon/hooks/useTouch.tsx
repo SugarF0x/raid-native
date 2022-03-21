@@ -12,6 +12,11 @@ export function useTouch(options: TouchOptions) {
 
   const panResponder = useMemo(() => PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderStart: (e: GestureResponderEvent) => {
+      const { locationX: x, locationY: y } = e.nativeEvent
+      onTouchMove({ x, y })
+    },
     onPanResponderMove: (e: GestureResponderEvent) => {
       const { locationX: x, locationY: y } = e.nativeEvent
       onTouchMove({ x, y })
