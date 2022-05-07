@@ -1,6 +1,7 @@
 import Sound from "react-native-sound"
+import { FileType } from '@definitions'
 
-export const playSound = (sound: any) => {
+export const playSound = (sound: FileType) => {
   const ass = new Sound(sound, (error) => {
     if (error) {
       console.log('failed to load the sound', error);
