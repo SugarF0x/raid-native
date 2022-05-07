@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { NativeRouter, Routes, Route } from "react-router-native"
 import { routes } from "./routes"
-import 'react-native-console-time-polyfill'
 import { View } from 'react-native'
 
 export default function App() {
