@@ -1,7 +1,7 @@
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { BACKGROUND_COLOR, STROKE_COLOR } from '@consts'
-import { Dungeon } from '@components'
+import { Dungeon, Hud } from '@components'
 
 export const GameScreen = () => {
   const [dungeonKey, setDungeonKey] = useState(0)
@@ -22,11 +22,7 @@ export const GameScreen = () => {
           </View>
         </View>
         <Dungeon key={dungeonKey} />
-        <View style={styles.hud}>
-          <View style={styles.bar} />
-          <View style={styles.mid} />
-          <View style={styles.bar} />
-        </View>
+        <Hud />
       </View>
     </SafeAreaView>
   )
@@ -72,23 +68,5 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderColor: STROKE_COLOR,
     flex: 1
-  },
-  hud: {
-    flexDirection: "row",
-    padding: 8
-  },
-  bar: {
-    aspectRatio: 1,
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: STROKE_COLOR,
-    flex: 1
-  },
-  mid: {
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: STROKE_COLOR,
-    marginHorizontal: 8,
-    flex: 1.5
   }
 })
