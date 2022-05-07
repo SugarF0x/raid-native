@@ -1,20 +1,21 @@
-import { Audio, AVPlaybackNativeSource, AVPlaybackStatus } from 'expo-av'
-import { Sound } from 'expo-av/build/Audio/Sound'
+import Sound from "react-native-sound"
 
-const options = { shouldPlay: true }
+export const playSound = (sound: any) => {
+  const ass = new Sound(sound, (error) => {
+    if (error) {
+      console.log('failed to load the sound', error);
+      return;
+    }
+    // loaded successfully
+    console.log('duration in seconds: ' + ass.getDuration() + 'number of channels: ' + ass.getNumberOfChannels());
 
-function errorCatcher() {}
-
-function soundUnloader(res: { sound: Sound, status: AVPlaybackStatus }) {
-  res.sound.setOnPlaybackStatusUpdate((status) => {
-    if(status.isLoaded && !status.didJustFinish) return
-    res.sound.unloadAsync().catch(errorCatcher)
+    // Play the sound with an onEnd callback
+    ass.play((success) => {
+      if (success) {
+        console.log('successfully finished playing');
+      } else {
+        console.log('playback failed due to audio decoding errors');
+      }
+    });
   })
 }
-
-export function playSound(sound: AVPlaybackNativeSource) {
-  if (process.env.NODE_ENV === 'development') return
-  Audio.Sound.createAsync(sound, options).then(soundUnloader).catch(errorCatcher)
-}
-
-export default playSound
