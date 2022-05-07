@@ -1,59 +1,63 @@
-import styled, { css } from 'styled-components/native'
-import React from "react"
-import { SafeAreaView, StyleProp, Text, TextStyle } from "react-native"
+import React, { useMemo } from 'react'
+import { SafeAreaView, StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native'
 import { Link } from "react-router-native"
 import { GameScreen } from "@screens/Game"
 
-const Wrapper = styled(SafeAreaView)`
-  display: flex;
-  background-color: darkred;
-  height: 100%;
-  justify-content: space-between;
-`
+const LinkButton = ({ children, style, disabled, to }: { to: string, disabled?: boolean, children: React.ReactNode, style?: StyleProp<TextStyle> }) => {
+  const textStyles = useMemo<StyleProp<TextStyle>>(() => ([
+    styles.link,
+    disabled && styles.linkDisabled
+  ]), [style, disabled])
 
-const Title = styled.Text`
-  font-size: 48px;
-  padding: 16px;
-  color: yellow;
-  font-weight: bold;
-`
-
-const Actions = styled.View`
-  display: flex;
-  align-items: flex-end;
-`
-
-const Touchable = ({ children, style, disabled, to }: { to: string, disabled?: boolean, children: React.ReactNode, style?: StyleProp<TextStyle> }) => {
   return (
     <Link to={to} disabled={disabled} activeOpacity={.75} underlayColor={'transparent'}>
-      <Text style={style}>
+      <Text style={textStyles}>
         {children}
       </Text>
     </Link>
   )
 }
 
-const Button = styled(Touchable)`
-  font-size: 32px;
-  padding: 8px 16px;
-  color: yellow;
-  ${props => props.disabled && css`
-    opacity: .5;
-  `}
-`
-
 export const HomeScreen = () => {
 
   return (
-    <Wrapper>
-      <Title>Raid Legacy</Title>
-      <Actions>
-        <Button to={'/'} disabled>Continue</Button>
-        <Button to={GameScreen.path}>New game</Button>
-        <Button to={'/'} disabled>Options</Button>
-        <Button to={'/'} disabled>Credits</Button>
-      </Actions>
-    </Wrapper>
+    <SafeAreaView style={styles.wrapper}>
+      <Text style={styles.title}>Raid Legacy</Text>
+      <View style={styles.actions}>
+        <LinkButton to={'/'} disabled>Continue</LinkButton>
+        <LinkButton to={GameScreen.path}>New game</LinkButton>
+        <LinkButton to={'/'} disabled>Options</LinkButton>
+        <LinkButton to={'/'} disabled>Credits</LinkButton>
+      </View>
+    </SafeAreaView>
   )
 }
 HomeScreen.path = '/'
+
+const styles = StyleSheet.create({
+  wrapper: {
+    display: "flex",
+    backgroundColor: "darkred",
+    height: "100%",
+    justifyContent: "space-between"
+  },
+  title: {
+    fontSize: 48,
+    padding: 16,
+    color: "yellow",
+    fontWeight: "bold"
+  },
+  actions: {
+    display: "flex",
+    alignItems: "flex-end"
+  },
+  link: {
+    fontSize: 32,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    color: "yellow"
+  },
+  linkDisabled: {
+    opacity: .5
+  }
+})
